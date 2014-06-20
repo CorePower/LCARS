@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='LCARSGui',
-      version='1.0',
+      version='1.0.0.5',
       description='LCARS style GUI for Python. Requires pygame',
       author='James Fowkes',
       author_email='jamesfowkes@gmail.com',

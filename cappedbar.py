@@ -7,46 +7,115 @@ from __future__ import division
 import pygame
 
 from LCARSGui import LCARSObject, LCARSText, TextAlign
+from exceptions import GeometryException
 
-class CapLocation:
-	CAP_TOP = 1
-	CAP_LEFT = 2
-	CAP_RIGHT = 4
-	CAP_BOTTOM = 8
+def glow_colour(clr):
+	glow = pygame.Color(clr.r, clr.g, clr.b, clr.a)
+	hsla = glow.hsla
+	glow.hsla = (hsla[0], hsla[1], hsla[2]*1.5, hsla[3])
+	return glow
+
+class Cap(object):
+	NONE = 0
+	TOP = 1
+	LEFT = 2
+	RIGHT = 4
+	BOTTOM = 8
+	HORZ = 6
+	VERT = 9
+	def __init__(self, bound, clip):
+		self.bound = bound
+		self.clip = clip
+
+	def draw(self, window, colour):
+		oldclip = window.get_clip()
+		window.set_clip(self.clip)
+		pygame.draw.ellipse(window, colour, self.bound)
+		window.set_clip(oldclip)
+
+	def __repr__(self):
+		return "<bound %s / clip %s>" % (str(self.bound), str(self.clip))
 
 class LCARSCappedBar(LCARSObject):
 
-	def __init__(self, rect, caplocation, text, fg, bg, visible):
+	def __init__(self, rect, caplocation, text, fg, bg, textclr, visible):
 		LCARSObject.__init__(self, rect, fg, bg, visible)
+		self.glow = glow_colour(fg)
+		self.is_glowing = False
+
+		print str(self.rect)
 		
 		self.textString = text
 		
 		if len(text) > 0:
-			if (self.rect.h > self.rect.w):
+			if self.rect.h > self.rect.w:
 				#Portrait format
 				texty = self.rect.bottom - self.rect.w
 				textx = self.rect.right - (self.rect.w / 10)
 				textw = self.PointSizeFromBarWidth()
-			else:
+			elif self.rect.h < self.rect.w:
 				#Landscape
 				texty = self.rect.centery
 				textx = self.rect.right - (self.rect.h/2)
 				textw = self.PointSizeFromBarHeight()
+			else:
+				#Square
+				texty = self.rect.centery
+				textx = self.rect.right - (self.rect.h/2)
+				textw = self.PointSizeFromBarHeight()
 				
-			self.text = LCARSText((textx, texty), text, textw, TextAlign.XALIGN_RIGHT, self.bg, self.fg, True) # Swap fg/bg text colours
+			self.text = LCARSText((textx, texty), text, textw, TextAlign.XALIGN_RIGHT, textclr, self.fg, True)
+			self.glowtext = LCARSText((textx, texty), text, textw, TextAlign.XALIGN_RIGHT, textclr, self.glow, True)
 		else:
 			self.text = None
-			
+			self.glowtext = None
+
+		self.innerrect = pygame.Rect(self.rect)
 		self.caps = []
-		if (caplocation & CapLocation.CAP_TOP):
-			self.caps.append({'rect':pygame.Rect(0, 0, self.rect.w, self.rect.w), 'loc':CapLocation.CAP_TOP})
-		if (caplocation & CapLocation.CAP_LEFT):
-			self.caps.append({'rect':pygame.Rect(0, 0, self.rect.h, self.rect.h), 'loc':CapLocation.CAP_LEFT})
-		if (caplocation & CapLocation.CAP_RIGHT):
-			self.caps.append({'rect':pygame.Rect(self.rect.w - self.rect.h, 0, self.rect.h, self.rect.h), 'loc':CapLocation.CAP_RIGHT})
-		if (caplocation & CapLocation.CAP_BOTTOM):
-			self.caps.append({'rect':pygame.Rect(0, self.rect.h - self.rect.w, self.rect.w, self.rect.w), 'loc':CapLocation.CAP_BOTTOM})
-			
+		if (caplocation & Cap.TOP):
+			self.add_top_cap()
+		if (caplocation & Cap.LEFT):
+			self.add_left_cap()
+		if (caplocation & Cap.RIGHT):
+			self.add_right_cap()
+		if (caplocation & Cap.BOTTOM):
+			self.add_bottom_cap()
+
+
+	def add_left_cap(self):
+		if self.rect.height > self.rect.width: raise GeometryException("cannot add a horizontal cap on a portrait-shaped bar")
+		radius = self.rect.height/2
+		bound = pygame.Rect(self.rect.left, self.rect.top, 2*radius, 2*radius)
+		clip  = pygame.Rect(self.rect.left, self.rect.top, radius, 2*radius)
+		self.caps.append(Cap(bound, clip))
+		self.innerrect.left += radius
+		self.innerrect.width -= radius
+
+	def add_right_cap(self):
+		if self.rect.height > self.rect.width: raise GeometryException("cannot add a horizontal cap on a portrait-shaped bar")
+		radius = self.rect.height/2
+		bound = pygame.Rect(self.rect.right-2*radius, self.rect.top, 2*radius, 2*radius)
+		clip  = pygame.Rect(self.rect.right-radius, self.rect.top, radius, 2*radius)
+		self.caps.append(Cap(bound, clip))
+		self.innerrect.width -= radius
+
+	def add_top_cap(self):
+		if self.rect.height < self.rect.width: raise GeometryException("cannot add a vertical cap on a landscape-shaped bar")
+		radius = self.rect.width/2
+		bound = pygame.Rect(self.rect.left, self.rect.top, 2*radius, 2*radius)
+		clip  = pygame.Rect(self.rect.left, self.rect.top, 2*radius, radius)
+		self.caps.append(Cap(bound, clip))
+		self.innerrect.top += radius
+		self.innerrect.height -= radius
+
+	def add_bottom_cap(self):
+		if self.rect.height < self.rect.width: raise GeometryException("cannot add a vertical cap on a landscape-shaped bar")
+		radius = self.rect.width/2
+		bound = pygame.Rect(self.rect.left, self.rect.bottom-2*radius, 2*radius, 2*radius)
+		clip  = pygame.Rect(self.rect.left, self.rect.bottom-radius, 2*radius, radius)
+		self.caps.append(Cap(bound, clip))
+		self.innerrect.height -= radius
+
 	def PointSizeFromBarHeight(self):
 		pointSizeAt50px = 24
 		return int((self.rect.h / 50) * pointSizeAt50px)
@@ -70,42 +139,31 @@ class LCARSCappedBar(LCARSObject):
 		self.rect.width = newWidth
 		# Make sure that text is correctly located
 		self.setText(self.textString)
-		
-	def draw(self, window):
-		
-		if (self.visible):
-			# Draw on a separate surface before blitting
-			surf = pygame.Surface(self.rect.size)
-				
-			#Define the rectangle inside the endcaps			
-			irect = self.rect.copy()
-			irect.left = 0
-			irect.top = 0
-			
-			# Draw each endcap
-			for capDict in self.caps:
-				cap = capDict['rect']
-				loc = capDict['loc']
-				# Remove rectangle enclosing cap before drawing
-				if loc == CapLocation.CAP_RIGHT:
-					irect.w -= cap.w/2
-				if loc == CapLocation.CAP_LEFT:
-					irect.w -= cap.w/2
-					irect.left += cap.w/2
-				if loc == CapLocation.CAP_BOTTOM:
-					irect.h -= cap.w/2
-				if loc == CapLocation.CAP_TOP:
-					irect.h -= cap.w/2
-					irect.top += cap.w/2
-				
-				# pygame doesn't do filled arcs well, so draw full circle
-				pygame.draw.ellipse(surf, self.fg, cap, 0)
 
-			surf.fill(self.fg, irect)
-			surf.set_colorkey(self.bg)
+	def onmousedown(self, event):
+		self.is_glowing = True
+
+	def onmouseup(self, event):
+		self.is_glowing = False
+
+	def ondragout(self, event):
+		self.is_glowing = False
+
+	def draw(self, window):
+		if not self.visible: return
+		clr = self.fg
+		text = self.text
+		if self.is_glowing:
+			clr = self.glow
+			text = self.glowtext
+
+		# Draw each endcap
+		for cap in self.caps:
+			cap.draw(window, clr)
+
+		if self.innerrect.width > 0 and self.innerrect.height > 0:
+			pygame.draw.rect(window, clr, self.innerrect)
 			
-			window.blit(surf, self.rect)
-			
-			# Draw text (if any)
-			if not (self.text is None):
-				self.text.draw(window)
+		# Draw text (if any)
+		if text is not None:
+			text.draw(window)
