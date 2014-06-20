@@ -34,7 +34,7 @@ class Cap(object):
 		window.set_clip(oldclip)
 
 	def __repr__(self):
-		return "<bound %s / clip %s>" % (str(self.bound), str(self.clip))
+		return "<Cap: bound=%s, clip=%s>" % (str(self.bound), str(self.clip))
 
 class LCARSCappedBar(LCARSObject):
 
@@ -42,9 +42,6 @@ class LCARSCappedBar(LCARSObject):
 		LCARSObject.__init__(self, rect, fg, bg, visible)
 		self.glow = glow_colour(fg)
 		self.is_glowing = False
-
-		print str(self.rect)
-		
 		self.textString = text
 		
 		if len(text) > 0:

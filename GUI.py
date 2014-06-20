@@ -64,33 +64,29 @@ class GUI(object):
 		ctrl = self.find_control_at_point(event.pos)
 		if ctrl is None: return
 		self.LAST_DRAG_CTRL = ctrl
-		print "mousedown"
 		ctrl.onmousedown(event)
 
 	def onmouseup(self, event):
 		self.LAST_DRAG_CTRL = None
 		ctrl = self.find_control_at_point(event.pos)
 		if ctrl is None: return
-		print "mouseup"
 		ctrl.onmouseup(event)
 
 	def onmousemotion(self, event):
-		print "mousemotion", event.pos
 		ctrl = self.find_control_at_point(event.pos)
 		if event.buttons == (0, 0, 0):
 			if ctrl is None: return
 			ctrl.onmouseover(event)
 		else:
-			print ctrl, self.LAST_DRAG_CTRL
 			if ctrl is None:
 				if self.LAST_DRAG_CTRL is None: return
 				self.LAST_DRAG_CTRL = None
-				print "dragout"
 				self.LAST_DRAG_CTRL.ondragout(event)
 			else:
 				if ctrl == self.LAST_DRAG_CTRL:
 					ctrl.ondragover(event)
 				else:
+					self.LAST_DRAG_CTRL.ondragout(event)
 					self.LAST_DRAG_CTRL = ctrl
 					ctrl.ondragin(event)
 
@@ -111,5 +107,4 @@ class GUI(object):
 			try:
 				self.onevent(event)
 			except KeyError:
-				print event
 				pass # ignore unregistered events
