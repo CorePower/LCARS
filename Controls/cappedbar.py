@@ -6,8 +6,8 @@ from __future__ import division
 
 import pygame
 
-from LCARSGui import LCARSObject, LCARSText, TextAlign
-from exceptions import GeometryException
+from LCARS.Controls import Control, Text, TextAlign
+from LCARS.Exceptions import GeometryException
 
 def glow_colour(clr):
 	glow = pygame.Color(clr.r, clr.g, clr.b, clr.a)
@@ -36,36 +36,13 @@ class Cap(object):
 	def __repr__(self):
 		return "<Cap: bound=%s, clip=%s>" % (str(self.bound), str(self.clip))
 
-class LCARSCappedBar(LCARSObject):
-
+class CappedBar(Control):
 	def __init__(self, rect, caplocation, text, fg, bg, textclr, visible):
-		LCARSObject.__init__(self, rect, fg, bg, visible)
+		Control.__init__(self, rect, fg, bg, visible)
 		self.glow = glow_colour(fg)
 		self.is_glowing = False
-		self.textString = text
-		
-		if len(text) > 0:
-			if self.rect.h > self.rect.w:
-				#Portrait format
-				texty = self.rect.bottom - self.rect.w
-				textx = self.rect.right - (self.rect.w / 10)
-				textw = self.PointSizeFromBarWidth()
-			elif self.rect.h < self.rect.w:
-				#Landscape
-				texty = self.rect.centery
-				textx = self.rect.right - (self.rect.h/2)
-				textw = self.PointSizeFromBarHeight()
-			else:
-				#Square
-				texty = self.rect.centery
-				textx = self.rect.right - (self.rect.h/2)
-				textw = self.PointSizeFromBarHeight()
-				
-			self.text = LCARSText((textx, texty), text, textw, TextAlign.XALIGN_RIGHT, textclr, self.fg, True)
-			self.glowtext = LCARSText((textx, texty), text, textw, TextAlign.XALIGN_RIGHT, textclr, self.glow, True)
-		else:
-			self.text = None
-			self.glowtext = None
+		self.textclr = textclr
+		self.setText(text)
 
 		self.innerrect = pygame.Rect(self.rect)
 		self.caps = []
@@ -122,17 +99,35 @@ class LCARSCappedBar(LCARSObject):
 		return int((self.rect.w / 50) * pointSizeAt50px)
 
 	def setText(self, text):
-		texty = self.rect.centery
-		textx = self.rect.right - (self.rect.h/2)
+		if len(text) > 0:
+			if self.rect.h > self.rect.w:
+				#Portrait format
+				texty = self.rect.bottom - self.rect.w
+				textx = self.rect.right - (self.rect.w / 10)
+				textw = self.PointSizeFromBarWidth()
+			elif self.rect.h < self.rect.w:
+				#Landscape
+				texty = self.rect.centery
+				textx = self.rect.right - (self.rect.h/2)
+				textw = self.PointSizeFromBarHeight()
+			else:
+				#Square
+				texty = self.rect.centery
+				textx = self.rect.right - (self.rect.h/2)
+				textw = self.PointSizeFromBarHeight()
+
+			self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_RIGHT, self.textclr, self.fg, True)
+			self.glowtext = Text((textx, texty), text, textw, TextAlign.XALIGN_RIGHT, self.textclr, self.glow, True)
+		else:
+			self.text = None
+			self.glowtext = None
 
 		self.textString = text
-		self.text = LCARSText((textx, texty), text, self.PointSizeFromBarHeight(), TextAlign.XALIGN_RIGHT, self.bg, self.fg, True) # Swap fg/bg text colours
 
 	def getText(self):
 		return self.textString
-	
+
 	def setWidth(self, newWidth):
-	
 		self.rect.width = newWidth
 		# Make sure that text is correctly located
 		self.setText(self.textString)
@@ -160,7 +155,7 @@ class LCARSCappedBar(LCARSObject):
 
 		if self.innerrect.width > 0 and self.innerrect.height > 0:
 			pygame.draw.rect(window, clr, self.innerrect)
-			
+
 		# Draw text (if any)
 		if text is not None:
 			text.draw(window)

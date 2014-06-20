@@ -1,0 +1,64 @@
+offline
+	#ff0000 / #330000 flashing
+
+== Primary systems ==
+elbos
+	#f1df6f
+unavailable
+	#3399ff
+primary
+	#99ccff
+colour1
+	#ffff33
+colour2
+	#ffffcc
+
+== Secondary systems ==
+elbos
+	#b19f7a
+unavailable
+	#5355de
+primary
+	#99ccff
+colour1
+	#ffcc00
+colour2
+	#ffff99
+
+== Ancillary systems ==
+elbos
+	#f1b1af
+unavailable
+	#a27fa5
+primary
+	#adacd8
+colour1
+	#ffff33
+colour2
+	#e6b0d4
+
+== Database systems ==
+elbos
+	#cc6666
+unavailable
+	#ccccff
+primary
+	#99ccff
+colour1
+	#ff9900
+colour2
+	n/a
+
+== Multi-display ==
+upper elbo
+      #99ccff
+lower elbo
+      #cc6666
+colour1
+	#ff9900
+colour2
+	#cc99cc
+text1
+	#ffffff
+text2
+	#ff9900

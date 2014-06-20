@@ -4,7 +4,7 @@
 
 import pygame
 
-class LCARSObject:
+class Control:
 	def __init__(self, enclosingrect, fg, bg, visible):
 		self.rect = enclosingrect.copy()
 		self.fg = fg

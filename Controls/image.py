@@ -4,22 +4,19 @@
 
 import pygame
 
-from LCARSGui import LCARSObject
+from LCARS.Controls import Control
 
-class LCARSImage(LCARSObject):
-
+class Image(Control):
 	def __init__(self, enclosingrect, path, show):
-		LCARSObject.__init__(self, enclosingrect, 0, 0, show) ## Colours do not matter
+		Control.__init__(self, enclosingrect, 0, 0, show) ## Colours do not matter
 		self.image = pygame.image.load(path)
 		imgrect = self.image.get_rect()
-		
+
 		self.rect.w = imgrect.w
 		self.rect.h = imgrect.h
-		
+
 		self.rect.left = self.rect.left - (self.rect.w / 2)
 		self.rect.bottom = self.rect.bottom - (self.rect.h / 2)
-		
-		
+
 	def draw(self, window):
-		window.blit(self.image, self.rect) 
-		
+		window.blit(self.image, self.rect)

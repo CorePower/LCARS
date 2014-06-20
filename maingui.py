@@ -1,7 +1,6 @@
 import pygame
-from LCARSGui import *
+from LCARS.Controls import *
 from pygame.color import Color
-from pygame.rect import Rect
 
 pygame.init()
 
@@ -13,7 +12,7 @@ buttontext = Color("black")
 gold = Color("gold")
 red = Color("orangered")
 
-class GUI(object):
+class Main(object):
 	VALID_EVENT_NAMES = ["onmouseup", "onmousedown", "onmouseover", "ondrag", "ondragout", "ondragin"]
 
 	def __init__(self, width, height):
@@ -21,7 +20,7 @@ class GUI(object):
 		self.controls_m = {}
 		self.width  = width
 		self.height = height
-		self.screenrect = Rect(0, 0, width, height)
+		self.screenrect = pygame.Rect(0, 0, width, height)
 		self.running = True
 		self.LAST_DRAG_CTRL = None
 

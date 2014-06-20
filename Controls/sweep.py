@@ -6,12 +6,12 @@ from __future__ import division
 
 import pygame
 
-from LCARSGui import LCARSObject
+from LCARS.Controls import Control
 import math
 
-class SweepCornerExternal(LCARSObject):
+class SweepCornerExternal(Control):
 	def __init__(self, rect, bordersize, fg, bg, border, show):
-		LCARSObject.__init__(self, rect, fg, bg, show)
+		Control.__init__(self, rect, fg, bg, show)
 		self.border = border
 		x0, y0 = rect.topleft
 		minthick = min(rect.width, rect.height)
@@ -51,11 +51,11 @@ class SweepCornerExternal(LCARSObject):
 		window.set_clip(oldclip)
 
 
-class SweepCornerInternal(LCARSObject):
+class SweepCornerInternal(Control):
 	def __init__(self, rect, bordersize, fg, bg, border, show):
 		minthick = min(rect.width, rect.height)
 		rect = pygame.Rect(rect.right, rect.bottom, minthick, minthick)
-		LCARSObject.__init__(self, rect, fg, bg, show)
+		Control.__init__(self, rect, fg, bg, show)
 		self.rect = rect
 		self.clip = rect
 		self.borderbound = pygame.Rect(rect)
@@ -80,15 +80,14 @@ class SweepCornerInternal(LCARSObject):
 		window.set_clip(oldclip)
 
 
-class LCARSSweep(LCARSObject):
-
+class Sweep(Control):
 	def __init__(self, rect, corner, xthick, ythick, bordersize, fg, bg, border, show):
 		rect = pygame.Rect(rect)
 		rect.top += bordersize
 		rect.left += bordersize
 		rect.width -= bordersize
 		rect.height -= bordersize
-		LCARSObject.__init__(self, rect, fg, bg, show)
+		Control.__init__(self, rect, fg, bg, show)
 		self.bordersize = bordersize
 		self.border = border
 
@@ -107,16 +106,16 @@ class LCARSSweep(LCARSObject):
 
 		self.exterior = SweepCornerExternal(pygame.Rect(self.rect.left, self.rect.top, xthick, ythick), bordersize, fg, bg, border, show)
 		self.interior = SweepCornerInternal(pygame.Rect(self.rect.left, self.rect.top, xthick, ythick), bordersize, fg, bg, border, show)
-		
+
 	def collidepoint(self, pos):
 		collide = self.yrect.collidepoint(pos)
-		collide = collide or self.xrect.collidepoint(pos) 
+		collide = collide or self.xrect.collidepoint(pos)
 		collide = collide or self.exterior.collidepoint(pos)
 		return collide
-	
+
 	def l(self):
 		return self.xrect.left
-		
+
 	def draw(self, window):
 		if not self.visible: return
 

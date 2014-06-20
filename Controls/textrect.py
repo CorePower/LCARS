@@ -4,16 +4,11 @@
 
 import pygame
 
-from LCARSGui import LCARSText
+from LCARS.Controls import Text
 
-class LCARSRect(LCARSText):
-
+class TextRect(Text):
 	def __init__(self, rect, text, size, xalign, fg, bg):
-		
-#		self, alignpoint, text, size, xalign, fg, bg, show):
-		
-		self.LCARSText.__init__(self, rect, text, size, xalign, fg, bg, True)
-		
+		self.Text.__init__(self, rect, text, size, xalign, fg, bg, True)
+
 	def draw(self, window):
 		pygame.draw.rect(window, SS_FG, self.rect, 0)
-		
