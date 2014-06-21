@@ -25,7 +25,7 @@ class Text(Control):
 
 		font_list = pygame.font.get_fonts()
 		font_list = [font for font in font_list if (font.find(font_search) > -1)]
-		font_file = resource_filename(__name__, "../data/Swiss911ExtraCompressed.ttf")
+		font_file = resource_filename(__name__, "../data/fonts/Swiss911ExtraCompressed.ttf")
 
 		if len(font_list)>0:
 			font_file = font_list[0]

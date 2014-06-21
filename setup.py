@@ -10,5 +10,5 @@ setup(name='LCARS',
       url='http://www.github.com/jamesfowkes/lcarsgui/',
 	  packages=['LCARS', 'LCARS.Controls'],
       package_dir={'LCARS':'.'},
-	  package_data={'LCARS':['data/*']}
+	  package_data={'LCARS':['data/fonts/*', 'data/sfx/*']}
 	  )
