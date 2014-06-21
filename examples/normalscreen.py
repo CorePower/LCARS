@@ -40,12 +40,15 @@ class NormalScreen(LCARS.Main):
 		btn_exit = self.add_control("btn_exit", Button(Rect(0, col_stub.t()-40-spacing, 100, 40), Cap.NONE, "EXIT", clr_cancel, self.background, buttontext))
 		spacer = self.add_control("spacer", CappedBar(Rect(0, btn_bar.b()+spacing, 100, btn_exit.t()-btn_bar.b()-2*spacing), Cap.NONE, None, clr_elbos, None, None))
 
+		btn_top1 = self.add_control("btn_top1", Button(Rect(self.width-320,  50, 150, 40), Cap.HORZ, "TOP1", clr_primary, None, buttontext))
+		btn_top2 = self.add_control("btn_top2", Button(Rect(self.width-160,  50, 150, 40), Cap.HORZ, "TOP2", clr_primary, None, buttontext))
+		btn_top3 = self.add_control("btn_top3", Button(Rect(self.width-320, 100, 150, 40), Cap.HORZ, "TOP3", clr_primary, None, buttontext))
+		btn_top4 = self.add_control("btn_top4", Button(Rect(self.width-160, 100, 150, 40), Cap.HORZ, "TOP4", clr_primary, None, buttontext))
+
 		def on_btn_exit(event):
 			self.shutdown()
 		self.install_handler("btn_exit", "onclick", on_btn_exit)
-
-		self.install_handler("btn_foo", "onclick", lambda e: self.sounds.play("beep"))
-		self.install_handler("btn_bar", "onclick", lambda e: self.sounds.play("beep"))
+		btn_exit.beep = None
 
 	def onquit(self, event):
 		self.sounds.play("whirr")

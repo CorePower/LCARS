@@ -7,6 +7,9 @@ from __future__ import division
 import pygame
 
 from LCARS.Controls import Control, CappedBar, Text, TextAlign
+from LCARS.Sound import Cache, Clip
+
+BUTTON_BEEP_CACHE = Cache()
 
 def glow_colour(clr):
 	glow = pygame.Color(clr.r, clr.g, clr.b, clr.a)
@@ -24,6 +27,7 @@ class Button(CappedBar):
 	def __init__(self, rect, caplocation, text, fg, bg, textclr):
 		self.glow = glow_colour(fg)
 		self.is_glowing = False
+		self.beep = None
 		CappedBar.__init__(self, rect, caplocation, text, fg, bg, textclr)
 
 	def setGlowText(self, text):
@@ -50,6 +54,12 @@ class Button(CappedBar):
 	def _ondragin(self, event, target):
 		Control._ondragin(self, event, target)
 		self.is_glowing = (target==self)
+
+	def _onclick(self, event):
+		Control._onclick(self, event)
+		if self.beep is not None:
+			global BUTTON_BEEP_CACHE
+			BUTTON_BEEP_CACHE.play(self.beep)
 
 	def draw(self, window):
 		if not self.visible: return

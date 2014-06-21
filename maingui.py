@@ -46,6 +46,8 @@ class Main(object):
 			raise KeyError("control \"%s\" already exists" % name)
 		self.controls_m[name] = ctrl
 		self.controls_l.append(ctrl)
+		if isinstance(ctrl, Button):
+			ctrl.beep = "beep"
 		return ctrl
 
 	def install_handler(self, ctrlname, eventname, func):
