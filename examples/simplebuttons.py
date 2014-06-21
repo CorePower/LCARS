@@ -10,7 +10,7 @@ black = Color("black")
 gold = Color("gold")
 red = Color("orangered")
 darkgrey = Color("grey10")
-background = darkgrey
+
 buttontext = black
 
 #=======================================
@@ -23,13 +23,13 @@ class SimpleTest(LCARS.Main):
 
 	def create(self):
 		spacing = 5
-		elbo_stub = self.add_control("elbo_stub", CappedBar(pygame.Rect(self.width-50, 10, 50, 40), Cap.RIGHT, None, gold, background, None))
+		elbo_stub = self.add_control("elbo_stub", CappedBar(pygame.Rect(self.width-50, 10, 50, 40), Cap.RIGHT, None, gold, self.background, None))
 		elbo_caption = self.add_control("elbo_caption", Text((elbo_stub.l()-20, 30), "LCARS Terminal", 40, TextAlign.XALIGN_RIGHT, white, None))
-		elbo = self.add_control("elbo", Elbo(pygame.Rect(10, 10, elbo_caption.l()-20-spacing, 140), Corner.TOP_LEFT, 100, 40, gold, background))
-		btn_foo = self.add_control("btn_foo", Button(Rect(10, elbo.b()+spacing, 100, 40), Cap.NONE, "FOO", gold, background, buttontext))
-		btn_bar = self.add_control("btn_bar", Button(Rect(10, btn_foo.b()+spacing, 100, 40), Cap.NONE, "BAR", gold, background, buttontext))
+		elbo = self.add_control("elbo", Elbo(pygame.Rect(10, 10, elbo_caption.l()-20-spacing, 140), Corner.TOP_LEFT, 100, 40, gold, self.background))
+		btn_foo = self.add_control("btn_foo", Button(Rect(10, elbo.b()+spacing, 100, 40), Cap.NONE, "FOO", gold, self.background, buttontext))
+		btn_bar = self.add_control("btn_bar", Button(Rect(10, btn_foo.b()+spacing, 100, 40), Cap.NONE, "BAR", gold, self.background, buttontext))
 		col_stub = self.add_control("stub", CappedBar(Rect(10, self.height-40, 100, 40), Cap.NONE, None, gold, None, None))
-		btn_exit = self.add_control("btn_exit", Button(Rect(10, col_stub.t()-40-spacing, 100, 40), Cap.NONE, "EXIT", red, background, buttontext))
+		btn_exit = self.add_control("btn_exit", Button(Rect(10, col_stub.t()-40-spacing, 100, 40), Cap.NONE, "EXIT", red, self.background, buttontext))
 		spacer = self.add_control("spacer", CappedBar(pygame.Rect(10, btn_bar.b()+spacing, 100, btn_exit.t()-btn_bar.b()-2*spacing), Cap.NONE, None, gold, None, None))
 		self.install_handler("btn_foo", "onclick", lambda e: self.sounds.play("deny-chirp"))
 		self.install_handler("btn_bar", "onclick", lambda e: self.sounds.play("deny-chirp"))

@@ -3,16 +3,10 @@ from LCARS.Controls import *
 from LCARS.Sound import Mixer
 from pygame.color import Color
 
-background = Color("grey10")
-borders = Color("black")
-buttontext = Color("black")
-gold = Color("gold")
-red = Color("orangered")
-
 class Main(object):
 	VALID_EVENT_NAMES = ["onmouseup", "onmousedown", "onmouseover", "ondragover", "ondragout", "ondragin", "onclick"]
 
-	def __init__(self, width, height, caption=None, surface=None, fullscreen=False):
+	def __init__(self, width, height, caption=None, surface=None, fullscreen=False, background=pygame.Color("black")):
 		self.controls_l = []
 		self.controls_m = {}
 		self.width  = width
@@ -27,6 +21,7 @@ class Main(object):
 			pygame.display.set_mode((width, height), mode_flags)
 			surface = pygame.display.get_surface()
 		self.surface = surface
+		self.background = background
 		self.set_caption(caption)
 		self.running = True
 		self.drag_target = None
@@ -62,7 +57,7 @@ class Main(object):
 	def repaint(self, window=None):
 		if window is None:
 			window = self.surface
-		pygame.draw.rect(window, background, self.screenrect)
+		pygame.draw.rect(window, self.background, self.screenrect)
 		for ctrl in self.controls_l:
 			ctrl.draw(window)
 		pygame.display.flip()
@@ -131,17 +126,17 @@ class Main(object):
 				if self.last_drag_ctrl is None: return
 				self.last_drag_ctrl._ondragout(event, self.drag_target)
 				self.last_drag_ctrl = None
-				self.ondrag(event)
+				self.ondrag(event, self.drag_target)
 			else:
 				if ctrl == self.last_drag_ctrl:
 					ctrl._ondragover(event, self.drag_target)
-					self.ondrag(event)
+					self.ondrag(event, self.drag_target)
 				else:
 					if self.last_drag_ctrl is not None:
-						self.last_drag_ctrl._ondragout(event)
+						self.last_drag_ctrl._ondragout(event, self.drag_target)
 					self.last_drag_ctrl = ctrl
 					ctrl._ondragin(event, self.drag_target)
-					self.ondrag(event)
+					self.ondrag(event, self.drag_target)
 
 	def onquit(self, event):
 		pass
@@ -167,7 +162,7 @@ class Main(object):
 	def onmouseover(self, event):
 		pass
 
-	def ondrag(self, event):
+	def ondrag(self, event, target):
 		pass
 
 	def onevent(self, event):
