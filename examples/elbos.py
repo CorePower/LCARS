@@ -5,34 +5,24 @@ import LCARS
 from LCARS.Controls import *
 
 background = Color("grey10")
-borders = Color("black")
-buttontext = Color("black")
 gold = Color("gold")
 red = Color("orangered")
 
 #=======================================
 
-def main(gui):
-	clock = pygame.time.Clock()
-	while gui.running:
-		clock.tick(60)
-		gui.repaint()
-		gui.dispatch_events()
+class ElbosTest(LCARS.Main):
+	def __init__(self, width, height, surface=None, fullscreen=False):
+		LCARS.Main.__init__(self, width, height, "LCARS Demonstration: elbos", surface, fullscreen)
+		self.create()
 
-def create_gui(width, height):
-	pygame.display.set_mode((width, height))
-	pygame.display.set_caption("LCARS Demonstration: elbos")
-	midx, midy = (width/2-5, height/2-5)
-	orgx, orgy = (midx+10, midy+10)
-	gui = LCARS.Main(width, height)
-	xthick, ythick = (80, 10)
-	gui.add_control("elbo1", Elbo(pygame.Rect(0,    0,    midx,  midy),   Corner.BOTTOM_RIGHT, xthick, ythick, red, background))
-	gui.add_control("elbo2", Elbo(pygame.Rect(orgx, 0,    width, midy),   Corner.BOTTOM_LEFT,  xthick, ythick, gold,  background))
-	gui.add_control("elbo3", Elbo(pygame.Rect(0,    orgy, midx,  height), Corner.TOP_RIGHT,    xthick, ythick, gold, background))
-	gui.add_control("elbo4", Elbo(pygame.Rect(orgx, orgy, width, height), Corner.TOP_LEFT,     xthick, ythick, red,  background))
-	return gui
+	def create(self):
+		midx, midy = (self.width/2-5, self.height/2-5)
+		orgx, orgy = (midx+10, midy+10)
+		xthick, ythick = (80, 10)
+		self.add_control("elbo1", Elbo(pygame.Rect(0,    0,    midx,  midy),   Corner.BOTTOM_RIGHT, xthick, ythick, red, background))
+		self.add_control("elbo2", Elbo(pygame.Rect(orgx, 0,    self.width, midy),   Corner.BOTTOM_LEFT,  xthick, ythick, gold,  background))
+		self.add_control("elbo3", Elbo(pygame.Rect(0,    orgy, midx,  self.height), Corner.TOP_RIGHT,    xthick, ythick, gold, background))
+		self.add_control("elbo4", Elbo(pygame.Rect(orgx, orgy, self.width, self.height), Corner.TOP_LEFT,     xthick, ythick, red,  background))
 
 if __name__=='__main__':
-	pygame.init()
-	width, height = (700, 700)
-	main(create_gui(width, height))
+	ElbosTest(700, 700).mainloop()

@@ -31,6 +31,7 @@ class Main(object):
 		self.running = True
 		self.drag_target = None
 		self.last_drag_ctrl = None
+		self.key_target = None
 
 	def mainloop(self):
 		clock = pygame.time.Clock()
@@ -74,12 +75,27 @@ class Main(object):
 		return None
 
 	def shutdown(self):
-		self.running = False
+		self._onquit(None)
 
 	def _onquit(self, event):
+		self.running = False
 		self.onquit(event)
 
+	def _onkeydown(self, event):
+		if self.key_target is not None:
+			self.key_target._onkeydown(event)
+		self.onkeydown(event)
+
+	def _onkeyup(self, event):
+		if self.key_target is not None:
+			self.key_target._onkeyup(event)
+		if event.key == pygame.K_F4 and (event.mod & pygame.KMOD_ALT):
+			self._onquit(event)
+		self.onkeyup(event)
+
 	def _onkeypress(self, event):
+		if self.key_target is not None:
+			self.key_target._onkeypress(event)
 		self.onkeypress(event)
 
 	def _onmousedown(self, event):
@@ -97,6 +113,10 @@ class Main(object):
 		ctrl._onmouseup(event)
 		self.onmouseup(event)
 		if ctrl == self.drag_target:
+			if ctrl.has_hook("onkeyup"):
+				self.key_target = ctrl
+			else:
+				self.key_target = None
 			ctrl._onclick(event)
 			self.onclick(event)
 
@@ -124,11 +144,16 @@ class Main(object):
 					self.ondrag(event)
 
 	def onquit(self, event):
-		self.shutdown()
+		pass
 
 	def onkeypress(self, event):
-		if event.key == pygame.K_ESCAPE:
-			self.shutdown()
+		pass
+
+	def onkeydown(self, event):
+		pass
+
+	def onkeyup(self, event):
+		pass
 
 	def onmousedown(self, event):
 		pass
@@ -148,7 +173,10 @@ class Main(object):
 	def onevent(self, event):
 		if event.type == pygame.QUIT:
 			self._onquit(event)
+		elif event.type == pygame.KEYDOWN:
+			self._onkeydown(event)
 		elif event.type == pygame.KEYUP:
+			self._onkeyup(event)
 			self._onkeypress(event)
 		elif event.type == pygame.MOUSEBUTTONDOWN:
 			self._onmousedown(event)

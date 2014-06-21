@@ -39,9 +39,11 @@ class NormalScreen(LCARS.Main):
 		self.install_handler("btn_bar", "onclick", lambda e: self.sounds.play("deny-chirp"))
 
 		def on_btn_exit(event):
-			self.sounds.play("whirr")
 			self.shutdown()
 		self.install_handler("btn_exit", "onclick", on_btn_exit)
+
+	def onquit(self, event):
+		self.sounds.play("whirr")
 
 if __name__=='__main__':
 	NormalScreen(1366, 768, fullscreen=True).mainloop()

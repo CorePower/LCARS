@@ -34,11 +34,11 @@ class SimpleTest(LCARS.Main):
 		self.install_handler("btn_foo", "onclick", lambda e: self.sounds.play("deny-chirp"))
 		self.install_handler("btn_bar", "onclick", lambda e: self.sounds.play("deny-chirp"))
 		def on_btn_exit(event):
-			self.sounds.play("slide-into-place")
 			self.shutdown()
 		self.install_handler("btn_exit", "onclick", on_btn_exit)
 
+	def onquit(self, event):
+		self.sounds.play("slide-into-place")
+
 if __name__=='__main__':
-	pygame.init()
-	pygame.mixer.init()
 	SimpleTest(1024, 700).mainloop()
