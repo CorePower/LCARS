@@ -1,7 +1,7 @@
 import pygame
 
 class Drawable:
-	def __init__(self, enclosingrect, fg, bg, visible):
+	def __init__(self, enclosingrect, fg, bg, visible=True):
 		self.rect = enclosingrect.copy()
 		self.fg = fg
 		self.bg = bg

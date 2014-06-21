@@ -37,8 +37,8 @@ class Cap(object):
 		return "<Cap: bound=%s, clip=%s>" % (str(self.bound), str(self.clip))
 
 class CappedBar(Control):
-	def __init__(self, rect, caplocation, text, fg, bg, textclr, visible):
-		Control.__init__(self, rect, fg, bg, visible)
+	def __init__(self, rect, caplocation, text, fg, bg, textclr):
+		Control.__init__(self, rect, fg, bg)
 		self.glow = glow_colour(fg)
 		self.is_glowing = False
 		self.textclr = textclr
@@ -99,29 +99,30 @@ class CappedBar(Control):
 		return int((self.rect.w / 50) * pointSizeAt50px)
 
 	def setText(self, text):
-		if len(text) > 0:
-			if self.rect.h > self.rect.w:
-				#Portrait format
-				texty = self.rect.bottom - self.rect.h
-				textx = self.rect.right - (self.rect.w / 10)
-				textw = self.PointSizeFromBarWidth()
-			elif self.rect.h < self.rect.w:
-				#Landscape
-				texty = self.rect.centery
-				textx = self.rect.right - (self.rect.w/2)
-				textw = self.PointSizeFromBarHeight()
-			else:
-				#Square
-				texty = self.rect.centery
-				textx = self.rect.right - (self.rect.w/2)
-				textw = self.PointSizeFromBarHeight()
-
-			self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.fg, True)
-			self.glowtext = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.glow, True)
-		else:
+		if (text is None) or len(text) == 0:
 			self.text = None
 			self.glowtext = None
+			self.textString = ""
+			return
 
+		if self.rect.h > self.rect.w:
+			#Portrait format
+			texty = self.rect.bottom - self.rect.h
+			textx = self.rect.right - (self.rect.w / 10)
+			textw = self.PointSizeFromBarWidth()
+		elif self.rect.h < self.rect.w:
+			#Landscape
+			texty = self.rect.centery
+			textx = self.rect.right - (self.rect.w/2)
+			textw = self.PointSizeFromBarHeight()
+		else:
+			#Square
+			texty = self.rect.centery
+			textx = self.rect.right - (self.rect.w/2)
+			textw = self.PointSizeFromBarHeight()
+
+		self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.fg, True)
+		self.glowtext = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.glow, True)
 		self.textString = text
 
 	def getText(self):

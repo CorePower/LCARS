@@ -4,7 +4,7 @@
 
 import pygame
 
-from LCARS.Controls import Control
+from LCARS.Controls import Drawable
 from pkg_resources import resource_filename
 
 font_search = "swiss911"
@@ -19,8 +19,8 @@ class TextAlign:
 	XALIGN_LEFT = 1
 	XALIGN_RIGHT = 2
 
-class Text(Control):
-	def __init__(self, alignpoint, text, size, xalign, fg, bg, show):
+class Text(Drawable):
+	def __init__(self, alignpoint, text, size, xalign, fg, bg):
 		(x, y) = alignpoint
 		self.alignpoint = alignpoint
 		self.text_string = text
@@ -34,6 +34,7 @@ class Text(Control):
 		if len(font_list)>0:
 			font_file = font_list[0]
 
+		print "loading font [%s]" % font_file
 		self.font = pygame.font.Font(font_file, size)
 		self.text = self.font.render(text, 1, fg, bg)
 
@@ -48,7 +49,7 @@ class Text(Control):
 
 		rect = pygame.Rect(left, top, self.text.get_width(), self.text.get_height())
 
-		Control.__init__(self, rect, fg, bg, show)
+		Drawable.__init__(self, rect, fg, bg)
 
 	def draw(self, window):
 		window.blit(self.text, self.rect)

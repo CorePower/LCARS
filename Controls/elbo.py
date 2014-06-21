@@ -43,8 +43,8 @@ def reflect_rect(subject, frame, reflect_x, reflect_y):
 	subject.top  = min(y0, y1)
 
 class ElboCornerExternal(Drawable):
-	def __init__(self, rect, corner, fg, bg, show):
-		Drawable.__init__(self, rect, fg, bg, show)
+	def __init__(self, rect, corner, fg, bg):
+		Drawable.__init__(self, rect, fg, bg)
 		x0, y0 = rect.topleft
 		minthick = min(rect.width, rect.height)
 		maxthick = max(rect.width, rect.height)
@@ -61,7 +61,7 @@ class ElboCornerExternal(Drawable):
 			self.brect = False
 
 		self.curvebound = pygame.Rect(x0, y0, diameter, diameter)
-		self.reflect_curve(self.curvebound, corner)
+		self.reflect_curve(self.curvebound, corner, dw <= 0, dh <= 0)
 
 		self.clip = pygame.Rect(x0, y0, radius, radius)
 
@@ -71,12 +71,14 @@ class ElboCornerExternal(Drawable):
 		reflect_x, reflect_y = corner_to_reflections(corner)
 		frame = self.rect
 		if self.brect:
-			reflect_rect(self.brect,  frame, reflect_x, reflect_y);
-		reflect_rect(self.clip,   frame, reflect_x, reflect_y);
+			reflect_rect(self.brect, frame, reflect_x, reflect_y);
+		reflect_rect(self.clip, frame, reflect_x, reflect_y);
 
-	def reflect_curve(self, subject, corner):
-		if not (corner & Corner.LEFT):
+	def reflect_curve(self, subject, corner, horz, vert):
+		if horz and not (corner & Corner.LEFT):
 			subject.left -= subject.width/2
+		if vert and not (corner & Corner.TOP):
+			subject.top -= subject.height/2
 
 	def draw(self, window):
 		if not self.visible: return
@@ -90,10 +92,10 @@ class ElboCornerExternal(Drawable):
 
 
 class ElboCornerInternal(Drawable):
-	def __init__(self, rect, corner, fg, bg, show):
+	def __init__(self, rect, corner, fg, bg):
 		minthick = min(rect.width, rect.height)
 		orect = pygame.Rect(rect.left, rect.top, minthick, minthick)
-		Drawable.__init__(self, rect, fg, bg, show)
+		Drawable.__init__(self, rect, fg, bg)
 		self.orect = orect
 		self.clip = orect
 
@@ -123,8 +125,8 @@ class ElboCornerInternal(Drawable):
 
 
 class Elbo(Drawable):
-	def __init__(self, rect, corner, xthick, ythick, fg, bg, show):
-		Drawable.__init__(self, rect, fg, bg, show)
+	def __init__(self, rect, corner, xthick, ythick, fg, bg):
+		Drawable.__init__(self, rect, fg, bg)
 		armpos_x = self.rect.left+xthick
 		armpos_y = self.rect.top+ythick
 		armlen_w = self.rect.w-xthick
@@ -139,8 +141,8 @@ class Elbo(Drawable):
 
 		self.reflect(corner)
 
-		self.exterior = ElboCornerExternal(self.cornerextrect, corner, fg, bg, show)
-		self.interior = ElboCornerInternal(self.cornerintrect, corner, fg, bg, show)
+		self.exterior = ElboCornerExternal(self.cornerextrect, corner, fg, bg)
+		self.interior = ElboCornerInternal(self.cornerintrect, corner, fg, bg)
 
 	def reflect(self, corner):
 		reflect_x, reflect_y = corner_to_reflections(corner)

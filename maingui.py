@@ -1,11 +1,7 @@
 import pygame
 from LCARS.Controls import *
+from LCARS.Sound import Mixer
 from pygame.color import Color
-
-pygame.init()
-pygame.mixer.init()
-
-#f = pygame.font.Font("data/Swiss911ExtraCompressed.ttf", 12)
 
 background = Color("grey10")
 borders = Color("black")
@@ -16,29 +12,54 @@ red = Color("orangered")
 class Main(object):
 	VALID_EVENT_NAMES = ["onmouseup", "onmousedown", "onmouseover", "ondrag", "ondragout", "ondragin"]
 
-	def __init__(self, width, height):
+	def __init__(self, width, height, caption=None, surface=None, fullscreen=False):
 		self.controls_l = []
 		self.controls_m = {}
 		self.width  = width
 		self.height = height
 		self.screenrect = pygame.Rect(0, 0, width, height)
+		if surface is None:
+			pygame.init()
+			pygame.mixer.init()
+			mode_flags = pygame.DOUBLEBUF|pygame.NOFRAME
+			if fullscreen:
+				mode_flags = mode_flags|pygame.FULLSCREEN
+			pygame.display.set_mode((width, height), mode_flags)
+			surface = pygame.display.get_surface()
+		self.surface = surface
+		self.set_caption(caption)
 		self.running = True
 		self.LAST_DRAG_CTRL = None
+
+	def mainloop(self):
+		clock = pygame.time.Clock()
+		while self.running:
+			clock.tick(60)
+			self.repaint()
+			self.dispatch_events()
+		Mixer().wait()
+
+	def set_caption(self, text):
+		if text is None: text = ""
+		pygame.display.set_caption(text)
 
 	def add_control(self, name, ctrl):
 		if self.controls_m.has_key(name):
 			raise KeyError("control \"%s\" already exists" % name)
 		self.controls_m[name] = ctrl
 		self.controls_l.append(ctrl)
+		return ctrl
 
 	def install_handler(self, ctrlname, eventname, func):
 		ctrl = self.controls_m[ctrlname]
 		if eventname not in self.VALID_EVENT_NAMES:
 			raise KeyError("no such event handler \"%s\"", eventname)
 		setattr(ctrl, eventname, func)
+		return ctrl
 
-	def repaint(self):
-		window = pygame.display.get_surface()
+	def repaint(self, window=None):
+		if window is None:
+			window = self.surface
 		pygame.draw.rect(window, background, self.screenrect)
 		for ctrl in self.controls_l:
 			ctrl.draw(window)

@@ -8,7 +8,7 @@ from LCARS.Controls import Text
 
 class TextRect(Text):
 	def __init__(self, rect, text, size, xalign, fg, bg):
-		self.Text.__init__(self, rect, text, size, xalign, fg, bg, True)
+		self.Text.__init__(self, rect, text, size, xalign, fg, bg)
 
 	def draw(self, window):
 		pygame.draw.rect(window, SS_FG, self.rect, 0)

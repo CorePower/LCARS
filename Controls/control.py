@@ -3,8 +3,8 @@ import pygame
 from LCARS.Controls import Drawable
 
 class Control(Drawable):
-	def __init__(self, enclosingrect, fg, bg, visible):
-		Drawable.__init__(self, enclosingrect, fg, bg, visible)
+	def __init__(self, enclosingrect, fg, bg):
+		Drawable.__init__(self, enclosingrect, fg, bg)
 
 	def _onmousemotion(self, event):
 		self.onmousemotion(event)

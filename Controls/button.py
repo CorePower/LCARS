@@ -15,14 +15,14 @@ def glow_colour(clr):
 	return glow
 
 class Button(CappedBar):
-	def __init__(self, rect, caplocation, text, fg, bg, textclr, visible):
-		CappedBar.__init__(self, rect, caplocation, text, fg, bg, textclr, visible)
+	def __init__(self, rect, caplocation, text, fg, bg, textclr):
+		CappedBar.__init__(self, rect, caplocation, text, fg, bg, textclr)
 		self.glow = glow_colour(fg)
 		self.is_glowing = False
 
 		self.glowtext = None
 		if self.text:
-			self.glowtext = Text(self.text.alignpoint, text, self.text.fontsize, self.text.xalign, self.textclr, self.glow, True)
+			self.glowtext = Text(self.text.alignpoint, text, self.text.fontsize, self.text.xalign, self.textclr, self.glow)
 
 	def setText(self, text):
 		if len(text) > 0:
@@ -42,8 +42,8 @@ class Button(CappedBar):
 				textx = self.rect.right - (self.rect.w/2)
 				textw = self.PointSizeFromBarHeight()
 
-			self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.fg, True)
-			self.glowtext = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.glow, True)
+			self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.fg)
+			self.glowtext = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.glow)
 		else:
 			self.text = None
 			self.glowtext = None

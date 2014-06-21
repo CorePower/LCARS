@@ -7,8 +7,8 @@ import pygame
 from LCARS.Controls import Control
 
 class Image(Control):
-	def __init__(self, enclosingrect, path, show):
-		Control.__init__(self, enclosingrect, 0, 0, show) ## Colours do not matter
+	def __init__(self, enclosingrect, path):
+		Control.__init__(self, enclosingrect, 0, 0) ## Colours do not matter
 		self.image = pygame.image.load(path)
 		imgrect = self.image.get_rect()
 
