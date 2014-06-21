@@ -28,9 +28,9 @@ def create_gui(width, height):
 	pygame.display.set_caption("LCARS Terminal")
 	elborect = Rect(10, 10, width-10, height-10)
 	gui = LCARS.Main(width, height)
-	gui.add_control("elbo", Elbo(elborect, Corner.TOP_LEFT, 60, 10, 4, gold, background, borders, True))
-	gui.add_control("btn_foo", CappedBar(pygame.Rect(10, 150, 60, 40), Cap.NONE, "FOO", red, gold, buttontext, True))
-	gui.add_control("btn_exit", CappedBar(pygame.Rect(10, 500, 60, 40), Cap.NONE, "EXIT", red, gold, buttontext, True))
+	gui.add_control("elbo", Elbo(elborect, Corner.TOP_LEFT, 60, 10, gold, background, True))
+	gui.add_control("btn_foo", Button(pygame.Rect(10, 150, 60, 40), Cap.NONE, "FOO", red, gold, buttontext, True))
+	gui.add_control("btn_exit", Button(pygame.Rect(10, 500, 60, 40), Cap.NONE, "EXIT", red, gold, buttontext, True))
 	def on_btn_exit(event):
 		SOUNDS.play("slide-into-place")
 		gui.shutdown()

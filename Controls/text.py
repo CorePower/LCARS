@@ -22,6 +22,10 @@ class TextAlign:
 class Text(Control):
 	def __init__(self, alignpoint, text, size, xalign, fg, bg, show):
 		(x, y) = alignpoint
+		self.alignpoint = alignpoint
+		self.text_string = text
+		self.fontsize = size
+		self.xalign = xalign
 
 		font_list = pygame.font.get_fonts()
 		font_list = [font for font in font_list if (font.find(font_search) > -1)]
