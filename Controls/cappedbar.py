@@ -102,22 +102,22 @@ class CappedBar(Control):
 		if len(text) > 0:
 			if self.rect.h > self.rect.w:
 				#Portrait format
-				texty = self.rect.bottom - self.rect.w
+				texty = self.rect.bottom - self.rect.h
 				textx = self.rect.right - (self.rect.w / 10)
 				textw = self.PointSizeFromBarWidth()
 			elif self.rect.h < self.rect.w:
 				#Landscape
 				texty = self.rect.centery
-				textx = self.rect.right - (self.rect.h/2)
+				textx = self.rect.right - (self.rect.w/2)
 				textw = self.PointSizeFromBarHeight()
 			else:
 				#Square
 				texty = self.rect.centery
-				textx = self.rect.right - (self.rect.h/2)
+				textx = self.rect.right - (self.rect.w/2)
 				textw = self.PointSizeFromBarHeight()
 
-			self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_RIGHT, self.textclr, self.fg, True)
-			self.glowtext = Text((textx, texty), text, textw, TextAlign.XALIGN_RIGHT, self.textclr, self.glow, True)
+			self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.fg, True)
+			self.glowtext = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.glow, True)
 		else:
 			self.text = None
 			self.glowtext = None

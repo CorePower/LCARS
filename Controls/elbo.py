@@ -6,7 +6,7 @@ from __future__ import division
 
 import pygame
 
-from LCARS.Controls import Control
+from LCARS.Controls import Drawable
 import math
 
 class Corner:
@@ -42,9 +42,9 @@ def reflect_rect(subject, frame, reflect_x, reflect_y):
 	subject.left = min(x0, x1)
 	subject.top  = min(y0, y1)
 
-class ElboCornerExternal(Control):
+class ElboCornerExternal(Drawable):
 	def __init__(self, rect, corner, bordersize, fg, bg, border, show):
-		Control.__init__(self, rect, fg, bg, show)
+		Drawable.__init__(self, rect, fg, bg, show)
 		self.border = border
 		x0, y0 = rect.topleft
 		minthick = min(rect.width, rect.height)
@@ -78,8 +78,9 @@ class ElboCornerExternal(Control):
 	def reflect(self, corner):
 		reflect_x, reflect_y = corner_to_reflections(corner)
 		frame = self.rect
-		reflect_rect(self.brect,  frame, reflect_x, reflect_y);
-		reflect_rect(self.bpatch, frame, reflect_x, reflect_y);
+		if self.brect:
+			reflect_rect(self.brect,  frame, reflect_x, reflect_y);
+			reflect_rect(self.bpatch, frame, reflect_x, reflect_y);
 		reflect_rect(self.clip,   frame, reflect_x, reflect_y);
 
 	def reflect_curve(self, subject, corner):
@@ -99,11 +100,11 @@ class ElboCornerExternal(Control):
 		window.set_clip(oldclip)
 
 
-class ElboCornerInternal(Control):
+class ElboCornerInternal(Drawable):
 	def __init__(self, rect, corner, bordersize, fg, bg, border, show):
 		minthick = min(rect.width, rect.height)
 		orect = pygame.Rect(rect.left, rect.top, minthick, minthick)
-		Control.__init__(self, rect, fg, bg, show)
+		Drawable.__init__(self, rect, fg, bg, show)
 		self.orect = orect
 		self.clip = orect
 		self.borderbound = pygame.Rect(orect)
@@ -139,9 +140,9 @@ class ElboCornerInternal(Control):
 		window.set_clip(oldclip)
 
 
-class Elbo(Control):
+class Elbo(Drawable):
 	def __init__(self, rect, corner, xthick, ythick, bordersize, fg, bg, border, show):
-		Control.__init__(self, rect, fg, bg, show)
+		Drawable.__init__(self, rect, fg, bg, show)
 		self.bordersize = bordersize
 		self.border = border
 

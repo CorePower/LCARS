@@ -21,7 +21,7 @@ def main(gui):
 
 def create_gui(width, height):
 	pygame.display.set_mode((width, height))
-	pygame.display.set_caption("LCARS Terminal")
+	pygame.display.set_caption("LCARS Demonstration: elbos")
 	midx, midy = (width/2-5, height/2-5)
 	orgx, orgy = (midx+10, midy+10)
 	gui = LCARS.Main(width, height)

@@ -44,10 +44,11 @@ class Main(object):
 			ctrl.draw(window)
 		pygame.display.flip()
 
-	def find_control_at_point(self, pos):
-		for ctrl in self.controls_l:
+	def find_control_at_point(self, pos, hookname):
+		for ctrl in reversed(self.controls_l):
 			if ctrl.collidePoint(pos):
-				return ctrl
+				if ctrl.has_hook(hookname):
+					return ctrl
 		return None
 
 	def shutdown(self):
@@ -60,7 +61,7 @@ class Main(object):
 		self.onkeypress(event)
 
 	def _onmousedown(self, event):
-		ctrl = self.find_control_at_point(event.pos)
+		ctrl = self.find_control_at_point(event.pos, "onmousedown")
 		if ctrl is None: return
 		self.LAST_DRAG_CTRL = ctrl
 		ctrl._onmousedown(event)
@@ -68,13 +69,13 @@ class Main(object):
 
 	def _onmouseup(self, event):
 		self.LAST_DRAG_CTRL = None
-		ctrl = self.find_control_at_point(event.pos)
+		ctrl = self.find_control_at_point(event.pos, "onmouseup")
 		if ctrl is None: return
 		ctrl._onmouseup(event)
 		self.onmouseup(event)
 
 	def _onmousemotion(self, event):
-		ctrl = self.find_control_at_point(event.pos)
+		ctrl = self.find_control_at_point(event.pos, "onmousemotion")
 		if event.buttons == (0, 0, 0):
 			if ctrl is None: return
 			ctrl._onmouseover(event)

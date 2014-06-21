@@ -1,41 +1,28 @@
-##
-## LCARS GUI Objects Library : Base LCARS Object
-##
-
 import pygame
 
-class Control:
+from LCARS.Controls import Drawable
+
+class Control(Drawable):
 	def __init__(self, enclosingrect, fg, bg, visible):
-		self.rect = enclosingrect.copy()
-		self.fg = fg
-		self.bg = bg
-		self.visible = visible
+		Drawable.__init__(self, enclosingrect, fg, bg, visible)
 
-	def r(self):
-		return self.rect.left + self.rect.w
-
-	def l(self):
-		return self.rect.left
-
-	def t(self):
-		return self.rect.top
-
-	def b(self):
-		return self.rect.top + self.rect.h
-
-	def collidePoint(self, pos):
-		return self.rect.collidepoint(pos)
+	def _onmousemotion(self, event):
+		self.onmousemotion(event)
 
 	def _ondragover(self, event):
+		self._onmousemotion(event)
 		self.ondragover(event)
 
 	def _ondragout(self, event):
+		self._onmousemotion(event)
 		self.ondragout(event)
 
 	def _ondragin(self, event):
+		self._onmousemotion(event)
 		self.ondragin(event)
 
 	def _onmouseover(self, event):
+		self._onmousemotion(event)
 		self.onmouseover(event)
 
 	def _onmousedown(self, event):
@@ -43,6 +30,9 @@ class Control:
 
 	def _onmouseup(self, event):
 		self.onmouseup(event)
+
+	def onmousemotion(self, event):
+		pass
 
 	def ondragover(self, event):
 		pass
