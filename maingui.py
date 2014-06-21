@@ -87,7 +87,6 @@ class Main(object):
 		if ctrl is None: return
 		self.last_drag_ctrl = ctrl
 		self.drag_target = ctrl
-		print "onmousedown %s" % ctrl
 		ctrl._onmousedown(event)
 		self.onmousedown(event)
 
@@ -95,11 +94,9 @@ class Main(object):
 		self.last_drag_ctrl = None
 		ctrl = self.find_control_at_point(event.pos, "onmouseup")
 		if ctrl is None: return
-		print "onmouseup %s" % ctrl
 		ctrl._onmouseup(event)
 		self.onmouseup(event)
 		if ctrl == self.drag_target:
-			print "onclick %s" % ctrl
 			ctrl._onclick(event)
 			self.onclick(event)
 
@@ -107,27 +104,22 @@ class Main(object):
 		ctrl = self.find_control_at_point(event.pos, "onmousemotion")
 		if event.buttons == (0, 0, 0):
 			if ctrl is None: return
-			print "onmouseover %s" % ctrl
 			ctrl._onmouseover(event)
 			self.onmouseover(event)
 		else:
 			if ctrl is None:
 				if self.last_drag_ctrl is None: return
-				print "ondragout->None %s" % self.last_drag_ctrl
 				self.last_drag_ctrl._ondragout(event, self.drag_target)
 				self.last_drag_ctrl = None
 				self.ondrag(event)
 			else:
 				if ctrl == self.last_drag_ctrl:
-					print "ondragover %s" % ctrl
 					ctrl._ondragover(event, self.drag_target)
 					self.ondrag(event)
 				else:
 					if self.last_drag_ctrl is not None:
-						print "ondragout %s --> %s" % (str(self.last_drag_ctrl), str(ctrl))
 						self.last_drag_ctrl._ondragout(event)
 					self.last_drag_ctrl = ctrl
-					print "ondragin %s" % ctrl
 					ctrl._ondragin(event, self.drag_target)
 					self.ondrag(event)
 
