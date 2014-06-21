@@ -9,17 +9,17 @@ class Control(Drawable):
 	def _onmousemotion(self, event):
 		self.onmousemotion(event)
 
-	def _ondragover(self, event):
+	def _ondragover(self, event, target):
 		self._onmousemotion(event)
-		self.ondragover(event)
+		self.ondragover(event, target)
 
-	def _ondragout(self, event):
+	def _ondragout(self, event, target):
 		self._onmousemotion(event)
-		self.ondragout(event)
+		self.ondragout(event, target)
 
-	def _ondragin(self, event):
+	def _ondragin(self, event, target):
 		self._onmousemotion(event)
-		self.ondragin(event)
+		self.ondragin(event, target)
 
 	def _onmouseover(self, event):
 		self._onmousemotion(event)
@@ -28,19 +28,22 @@ class Control(Drawable):
 	def _onmousedown(self, event):
 		self.onmousedown(event)
 
+	def _onclick(self, event):
+		self.onclick(event)
+
 	def _onmouseup(self, event):
 		self.onmouseup(event)
 
 	def onmousemotion(self, event):
 		pass
 
-	def ondragover(self, event):
+	def ondragover(self, event, target):
 		pass
 
-	def ondragout(self, event):
+	def ondragout(self, event, target):
 		pass
 
-	def ondragin(self, event):
+	def ondragin(self, event, target):
 		pass
 
 	def onmouseover(self, event):
@@ -50,4 +53,7 @@ class Control(Drawable):
 		pass
 
 	def onmouseup(self, event):
+		pass
+
+	def onclick(self, event):
 		pass

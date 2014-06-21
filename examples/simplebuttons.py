@@ -31,12 +31,12 @@ class SimpleTest(LCARS.Main):
 		col_stub = self.add_control("stub", CappedBar(Rect(10, self.height-40, 100, 40), Cap.NONE, None, gold, None, None))
 		btn_exit = self.add_control("btn_exit", Button(Rect(10, col_stub.t()-40-spacing, 100, 40), Cap.NONE, "EXIT", red, background, buttontext))
 		spacer = self.add_control("spacer", CappedBar(pygame.Rect(10, btn_bar.b()+spacing, 100, btn_exit.t()-btn_bar.b()-2*spacing), Cap.NONE, None, gold, None, None))
-		self.install_handler("btn_foo", "onmouseup", lambda e: self.sounds.play("deny-chirp"))
-		self.install_handler("btn_bar", "onmouseup", lambda e: self.sounds.play("deny-chirp"))
+		self.install_handler("btn_foo", "onclick", lambda e: self.sounds.play("deny-chirp"))
+		self.install_handler("btn_bar", "onclick", lambda e: self.sounds.play("deny-chirp"))
 		def on_btn_exit(event):
 			self.sounds.play("slide-into-place")
 			self.shutdown()
-		self.install_handler("btn_exit", "onmouseup", on_btn_exit)
+		self.install_handler("btn_exit", "onclick", on_btn_exit)
 
 if __name__=='__main__':
 	pygame.init()

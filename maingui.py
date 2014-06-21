@@ -10,7 +10,7 @@ gold = Color("gold")
 red = Color("orangered")
 
 class Main(object):
-	VALID_EVENT_NAMES = ["onmouseup", "onmousedown", "onmouseover", "ondrag", "ondragout", "ondragin"]
+	VALID_EVENT_NAMES = ["onmouseup", "onmousedown", "onmouseover", "ondragover", "ondragout", "ondragin", "onclick"]
 
 	def __init__(self, width, height, caption=None, surface=None, fullscreen=False):
 		self.controls_l = []
@@ -29,7 +29,8 @@ class Main(object):
 		self.surface = surface
 		self.set_caption(caption)
 		self.running = True
-		self.LAST_DRAG_CTRL = None
+		self.drag_target = None
+		self.last_drag_ctrl = None
 
 	def mainloop(self):
 		clock = pygame.time.Clock()
@@ -84,38 +85,50 @@ class Main(object):
 	def _onmousedown(self, event):
 		ctrl = self.find_control_at_point(event.pos, "onmousedown")
 		if ctrl is None: return
-		self.LAST_DRAG_CTRL = ctrl
+		self.last_drag_ctrl = ctrl
+		self.drag_target = ctrl
+		print "onmousedown %s" % ctrl
 		ctrl._onmousedown(event)
 		self.onmousedown(event)
 
 	def _onmouseup(self, event):
-		self.LAST_DRAG_CTRL = None
+		self.last_drag_ctrl = None
 		ctrl = self.find_control_at_point(event.pos, "onmouseup")
 		if ctrl is None: return
+		print "onmouseup %s" % ctrl
 		ctrl._onmouseup(event)
 		self.onmouseup(event)
+		if ctrl == self.drag_target:
+			print "onclick %s" % ctrl
+			ctrl._onclick(event)
+			self.onclick(event)
 
 	def _onmousemotion(self, event):
 		ctrl = self.find_control_at_point(event.pos, "onmousemotion")
 		if event.buttons == (0, 0, 0):
 			if ctrl is None: return
+			print "onmouseover %s" % ctrl
 			ctrl._onmouseover(event)
 			self.onmouseover(event)
 		else:
 			if ctrl is None:
-				if self.LAST_DRAG_CTRL is None: return
-				self.LAST_DRAG_CTRL._ondragout(event)
-				self.LAST_DRAG_CTRL = None
+				if self.last_drag_ctrl is None: return
+				print "ondragout->None %s" % self.last_drag_ctrl
+				self.last_drag_ctrl._ondragout(event, self.drag_target)
+				self.last_drag_ctrl = None
 				self.ondrag(event)
 			else:
-				if ctrl == self.LAST_DRAG_CTRL:
-					ctrl._ondragover(event)
+				if ctrl == self.last_drag_ctrl:
+					print "ondragover %s" % ctrl
+					ctrl._ondragover(event, self.drag_target)
 					self.ondrag(event)
 				else:
-					if self.LAST_DRAG_CTRL is not None:
-						self.LAST_DRAG_CTRL._ondragout(event)
-						self.LAST_DRAG_CTRL = ctrl
-					ctrl._ondragin(event)
+					if self.last_drag_ctrl is not None:
+						print "ondragout %s --> %s" % (str(self.last_drag_ctrl), str(ctrl))
+						self.last_drag_ctrl._ondragout(event)
+					self.last_drag_ctrl = ctrl
+					print "ondragin %s" % ctrl
+					ctrl._ondragin(event, self.drag_target)
 					self.ondrag(event)
 
 	def onquit(self, event):
@@ -129,6 +142,9 @@ class Main(object):
 		pass
 
 	def onmouseup(self, event):
+		pass
+
+	def onclick(self, event):
 		pass
 
 	def onmouseover(self, event):

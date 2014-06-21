@@ -9,12 +9,6 @@ import pygame
 from LCARS.Controls import Control, Text, TextAlign
 from LCARS.Exceptions import GeometryException
 
-def glow_colour(clr):
-	glow = pygame.Color(clr.r, clr.g, clr.b, clr.a)
-	hsla = glow.hsla
-	glow.hsla = (hsla[0], hsla[1], hsla[2]*1.5, hsla[3])
-	return glow
-
 class Cap(object):
 	NONE = 0
 	TOP = 1
@@ -39,8 +33,6 @@ class Cap(object):
 class CappedBar(Control):
 	def __init__(self, rect, caplocation, text, fg, bg, textclr):
 		Control.__init__(self, rect, fg, bg)
-		self.glow = glow_colour(fg)
-		self.is_glowing = False
 		self.textclr = textclr
 		self.setText(text)
 
@@ -101,7 +93,6 @@ class CappedBar(Control):
 	def setText(self, text):
 		if (text is None) or len(text) == 0:
 			self.text = None
-			self.glowtext = None
 			self.textString = ""
 			return
 
@@ -121,8 +112,7 @@ class CappedBar(Control):
 			textx = self.rect.right - (self.rect.w/2)
 			textw = self.PointSizeFromBarHeight()
 
-		self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.fg, True)
-		self.glowtext = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.glow, True)
+		self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.fg)
 		self.textString = text
 
 	def getText(self):
@@ -133,33 +123,15 @@ class CappedBar(Control):
 		# Make sure that text is correctly located
 		self.setText(self.textString)
 
-	def _onmousedown(self, event):
-		self.is_glowing = True
-		self.onmousedown(event)
-
-	def _onmouseup(self, event):
-		self.is_glowing = False
-		self.onmouseup(event)
-
-	def _ondragout(self, event):
-		self.is_glowing = False
-		self.ondragout(event)
-
 	def draw(self, window):
 		if not self.visible: return
-		clr = self.fg
-		text = self.text
-		if self.is_glowing:
-			clr = self.glow
-			text = self.glowtext
-
 		# Draw each endcap
 		for cap in self.caps:
-			cap.draw(window, clr)
+			cap.draw(window, self.fg)
 
 		if self.innerrect.width > 0 and self.innerrect.height > 0:
-			pygame.draw.rect(window, clr, self.innerrect)
+			pygame.draw.rect(window, self.fg, self.innerrect)
 
 		# Draw text (if any)
-		if text is not None:
-			text.draw(window)
+		if self.text is not None:
+			self.text.draw(window)

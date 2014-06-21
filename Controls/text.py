@@ -34,7 +34,6 @@ class Text(Drawable):
 		if len(font_list)>0:
 			font_file = font_list[0]
 
-		print "loading font [%s]" % font_file
 		self.font = pygame.font.Font(font_file, size)
 		self.text = self.font.render(text, 1, fg, bg)
 

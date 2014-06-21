@@ -16,39 +16,18 @@ def glow_colour(clr):
 
 class Button(CappedBar):
 	def __init__(self, rect, caplocation, text, fg, bg, textclr):
-		CappedBar.__init__(self, rect, caplocation, text, fg, bg, textclr)
 		self.glow = glow_colour(fg)
 		self.is_glowing = False
+		CappedBar.__init__(self, rect, caplocation, text, fg, bg, textclr)
 
+	def setGlowText(self, text):
 		self.glowtext = None
 		if self.text:
 			self.glowtext = Text(self.text.alignpoint, text, self.text.fontsize, self.text.xalign, self.textclr, self.glow)
 
 	def setText(self, text):
-		if len(text) > 0:
-			if self.rect.h > self.rect.w:
-				#Portrait format
-				texty = self.rect.bottom - self.rect.h
-				textx = self.rect.right - (self.rect.w / 10)
-				textw = self.PointSizeFromBarWidth()
-			elif self.rect.h < self.rect.w:
-				#Landscape
-				texty = self.rect.centery
-				textx = self.rect.right - (self.rect.w/2)
-				textw = self.PointSizeFromBarHeight()
-			else:
-				#Square
-				texty = self.rect.centery
-				textx = self.rect.right - (self.rect.w/2)
-				textw = self.PointSizeFromBarHeight()
-
-			self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.fg)
-			self.glowtext = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.glow)
-		else:
-			self.text = None
-			self.glowtext = None
-
-		self.textString = text
+		CappedBar.setText(self, text)
+		self.setGlowText(text)
 
 	def _onmousedown(self, event):
 		self.is_glowing = True
@@ -58,9 +37,13 @@ class Button(CappedBar):
 		self.is_glowing = False
 		self.onmouseup(event)
 
-	def _ondragout(self, event):
+	def _ondragout(self, event, target):
 		self.is_glowing = False
-		self.ondragout(event)
+		self.ondragout(event, target)
+
+	def _ondragin(self, event, target):
+		self.is_glowing = (target==self)
+		self.ondragin(event, target)
 
 	def draw(self, window):
 		if not self.visible: return
