@@ -25,7 +25,7 @@ def create_gui(width, height):
 	midx, midy = (width/2-5, height/2-5)
 	orgx, orgy = (midx+10, midy+10)
 	gui = LCARS.Main(width, height)
-	xthick, ythick = (80, 40)
+	xthick, ythick = (80, 10)
 	gui.add_control("elbo1", Elbo(pygame.Rect(0,    0,    midx,  midy),   Corner.BOTTOM_RIGHT, xthick, ythick, red, background))
 	gui.add_control("elbo2", Elbo(pygame.Rect(orgx, 0,    width, midy),   Corner.BOTTOM_LEFT,  xthick, ythick, gold,  background))
 	gui.add_control("elbo3", Elbo(pygame.Rect(0,    orgy, midx,  height), Corner.TOP_RIGHT,    xthick, ythick, gold, background))
@@ -34,5 +34,5 @@ def create_gui(width, height):
 
 if __name__=='__main__':
 	pygame.init()
-	width, height = (1024, 700)
+	width, height = (700, 700)
 	main(create_gui(width, height))

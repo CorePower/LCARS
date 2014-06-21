@@ -132,12 +132,17 @@ class Elbo(Drawable):
 		armlen_w = self.rect.w-xthick
 		armlen_h = self.rect.h-ythick
 
-		self.yrect   = pygame.Rect(self.rect.left, armpos_y, xthick, armlen_h)
-		self.xrect   = pygame.Rect(armpos_x, self.rect.top, armlen_w, ythick)
+		max_ext_corner = min(max(xthick, ythick), rect.width, rect.height)
+		self.cornerextrect = pygame.Rect(self.rect.left, self.rect.top, max_ext_corner, max_ext_corner)
+		armpos_x = self.rect.left + max_ext_corner
+		armpos_y = self.rect.top + max_ext_corner
 
-		self.cornerextrect = pygame.Rect(self.rect.left, self.rect.top, xthick, ythick)
-		min_int_corner = min(xthick, ythick)
+		#min_int_corner = max(min(xthick, ythick), max_ext_corner/2)
+		min_int_corner = max_ext_corner/2
 		self.cornerintrect = pygame.Rect(self.rect.left+xthick-1, self.rect.top+ythick-1, min_int_corner, min_int_corner)
+
+		self.yrect   = pygame.Rect(self.rect.left, armpos_y, xthick, self.rect.h-max_ext_corner)
+		self.xrect   = pygame.Rect(armpos_x, self.rect.top, self.rect.w-max_ext_corner, ythick)
 
 		self.reflect(corner)
 

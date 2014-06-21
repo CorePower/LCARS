@@ -104,16 +104,17 @@ class Main(object):
 		else:
 			if ctrl is None:
 				if self.LAST_DRAG_CTRL is None: return
-				self.LAST_DRAG_CTRL = None
 				self.LAST_DRAG_CTRL._ondragout(event)
+				self.LAST_DRAG_CTRL = None
 				self.ondrag(event)
 			else:
 				if ctrl == self.LAST_DRAG_CTRL:
 					ctrl._ondragover(event)
 					self.ondrag(event)
 				else:
-					self.LAST_DRAG_CTRL._ondragout(event)
-					self.LAST_DRAG_CTRL = ctrl
+					if self.LAST_DRAG_CTRL is not None:
+						self.LAST_DRAG_CTRL._ondragout(event)
+						self.LAST_DRAG_CTRL = ctrl
 					ctrl._ondragin(event)
 					self.ondrag(event)
 
