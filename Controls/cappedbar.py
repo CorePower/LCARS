@@ -112,7 +112,7 @@ class CappedBar(Control):
 			textx = self.rect.right - (self.rect.w/2)
 			textw = self.PointSizeFromBarHeight()
 
-		self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, self.fg)
+		self.text = Text((textx, texty), text, textw, TextAlign.XALIGN_CENTRE, self.textclr, None)
 		self.textString = text
 
 	def getText(self):

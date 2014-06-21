@@ -33,21 +33,25 @@ class NormalScreen(LCARS.Main):
 		elbo_top = self.add_control("elbo_top", Elbo(Rect(0, 0, 150, 200), Corner.BOTTOM_LEFT, 100, 10, clr_elbos, self.background))
 		elbo_bottom = self.add_control("elbo_bottom", Elbo(Rect(0, elbo_top.b()+spacing, 150, 200), Corner.TOP_LEFT, 100, 10, clr_elbos, self.background))
 
-		btn_foo = self.add_control("btn_foo", Button(Rect(0, elbo_bottom.b()+spacing, 100, 40), Cap.NONE, "FOO", clr_unavail, self.background, buttontext))
-		btn_bar = self.add_control("btn_bar", Button(Rect(0, btn_foo.b()+spacing, 100, 40), Cap.NONE, "BAR", clr_unavail, self.background, buttontext))
+		btn_foo = self.add_control("btn_foo", Button(Rect(0, elbo_bottom.b()+spacing, 100, 40), Cap.NONE, "FOO", clr_primary, self.background, buttontext))
+		btn_bar = self.add_control("btn_bar", Button(Rect(0, btn_foo.b()+spacing, 100, 40), Cap.NONE, "BAR", clr_primary, self.background, buttontext))
+		btn_foo.set_enabled(False)
 		col_stub = self.add_control("stub", CappedBar(Rect(0, self.height-40, 100, 40), Cap.NONE, None, clr_elbos, None, None))
 		btn_exit = self.add_control("btn_exit", Button(Rect(0, col_stub.t()-40-spacing, 100, 40), Cap.NONE, "EXIT", clr_cancel, self.background, buttontext))
 		spacer = self.add_control("spacer", CappedBar(Rect(0, btn_bar.b()+spacing, 100, btn_exit.t()-btn_bar.b()-2*spacing), Cap.NONE, None, clr_elbos, None, None))
-
-		self.install_handler("btn_foo", "onclick", lambda e: self.sounds.play("deny-chirp"))
-		self.install_handler("btn_bar", "onclick", lambda e: self.sounds.play("deny-chirp"))
 
 		def on_btn_exit(event):
 			self.shutdown()
 		self.install_handler("btn_exit", "onclick", on_btn_exit)
 
+		self.install_handler("btn_foo", "onclick", lambda e: self.sounds.play("beep"))
+		self.install_handler("btn_bar", "onclick", lambda e: self.sounds.play("beep"))
+
 	def onquit(self, event):
 		self.sounds.play("whirr")
+
+	def while_control_disabled(self, ctrl, event, hookname):
+		self.sounds.play("deny-chirp")
 
 if __name__=='__main__':
 	NormalScreen(1366, 768, fullscreen=True).mainloop()

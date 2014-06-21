@@ -6,7 +6,7 @@ from __future__ import division
 
 import pygame
 
-from LCARS.Controls import CappedBar, Text, TextAlign
+from LCARS.Controls import Control, CappedBar, Text, TextAlign
 
 def glow_colour(clr):
 	glow = pygame.Color(clr.r, clr.g, clr.b, clr.a)
@@ -36,20 +36,20 @@ class Button(CappedBar):
 		self.setGlowText(text)
 
 	def _onmousedown(self, event):
+		Control._onmousedown(self, event)
 		self.is_glowing = True
-		self.onmousedown(event)
 
 	def _onmouseup(self, event):
+		Control._onmouseup(self, event)
 		self.is_glowing = False
-		self.onmouseup(event)
 
 	def _ondragout(self, event, target):
+		Control._ondragout(self, event, target)
 		self.is_glowing = False
-		self.ondragout(event, target)
 
 	def _ondragin(self, event, target):
+		Control._ondragin(self, event, target)
 		self.is_glowing = (target==self)
-		self.ondragin(event, target)
 
 	def draw(self, window):
 		if not self.visible: return

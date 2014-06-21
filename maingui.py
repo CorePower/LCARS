@@ -1,4 +1,5 @@
 import pygame
+from LCARS.Exceptions import StopEventBubbling, ControlIsDisabled
 from LCARS.Controls import *
 from LCARS.Sound import Mixer
 from pygame.color import Color
@@ -105,8 +106,6 @@ class Main(object):
 		self.last_drag_ctrl = None
 		ctrl = self.find_control_at_point(event.pos, "onmouseup")
 		if ctrl is None: return
-		ctrl._onmouseup(event)
-		self.onmouseup(event)
 		if ctrl == self.drag_target:
 			if ctrl.has_hook("onkeyup"):
 				self.key_target = ctrl
@@ -114,6 +113,8 @@ class Main(object):
 				self.key_target = None
 			ctrl._onclick(event)
 			self.onclick(event)
+		ctrl._onmouseup(event)
+		self.onmouseup(event)
 
 	def _onmousemotion(self, event):
 		ctrl = self.find_control_at_point(event.pos, "onmousemotion")
@@ -166,19 +167,24 @@ class Main(object):
 		pass
 
 	def onevent(self, event):
-		if event.type == pygame.QUIT:
-			self._onquit(event)
-		elif event.type == pygame.KEYDOWN:
-			self._onkeydown(event)
-		elif event.type == pygame.KEYUP:
-			self._onkeyup(event)
-			self._onkeypress(event)
-		elif event.type == pygame.MOUSEBUTTONDOWN:
-			self._onmousedown(event)
-		elif event.type == pygame.MOUSEBUTTONUP:
-			self._onmouseup(event)
-		elif event.type == pygame.MOUSEMOTION:
-			self._onmousemotion(event)
+		try:
+			if event.type == pygame.QUIT:
+				self._onquit(event)
+			elif event.type == pygame.KEYDOWN:
+				self._onkeydown(event)
+			elif event.type == pygame.KEYUP:
+				self._onkeyup(event)
+				self._onkeypress(event)
+			elif event.type == pygame.MOUSEBUTTONDOWN:
+				self._onmousedown(event)
+			elif event.type == pygame.MOUSEBUTTONUP:
+				self._onmouseup(event)
+			elif event.type == pygame.MOUSEMOTION:
+				self._onmousemotion(event)
+		except ControlIsDisabled, e:
+			self.while_control_disabled(e.ctrl, event, e.hookname)
+		except StopEventBubbling:
+			pass
 
 	def dispatch_events(self):
 		for event in pygame.event.get():
@@ -186,3 +192,6 @@ class Main(object):
 				self.onevent(event)
 			except KeyError:
 				pass # ignore unregistered events
+
+	def while_control_disabled(self, ctrl, event, hookname):
+		pass
