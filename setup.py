@@ -8,7 +8,7 @@ setup(name='LCARS',
       author='James Fowkes',
       author_email='jamesfowkes@gmail.com',
       url='http://www.github.com/jamesfowkes/lcarsgui/',
-	  packages=['LCARS', 'LCARS.Controls'],
+	  packages=['LCARS', 'LCARS.Controls', 'LCARS.Sound'],
       package_dir={'LCARS':'.'},
 	  package_data={'LCARS':['data/fonts/*', 'data/sfx/*']}
 	  )

@@ -26,6 +26,24 @@ class Control:
 	def collidePoint(self, pos):
 		return self.rect.collidepoint(pos)
 
+	def _ondragover(self, event):
+		self.ondragover(event)
+
+	def _ondragout(self, event):
+		self.ondragout(event)
+
+	def _ondragin(self, event):
+		self.ondragin(event)
+
+	def _onmouseover(self, event):
+		self.onmouseover(event)
+
+	def _onmousedown(self, event):
+		self.onmousedown(event)
+
+	def _onmouseup(self, event):
+		self.onmouseup(event)
+
 	def ondragover(self, event):
 		pass
 

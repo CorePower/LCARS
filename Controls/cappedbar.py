@@ -132,14 +132,17 @@ class CappedBar(Control):
 		# Make sure that text is correctly located
 		self.setText(self.textString)
 
-	def onmousedown(self, event):
+	def _onmousedown(self, event):
 		self.is_glowing = True
+		self.onmousedown(event)
 
-	def onmouseup(self, event):
+	def _onmouseup(self, event):
 		self.is_glowing = False
+		self.onmouseup(event)
 
-	def ondragout(self, event):
+	def _ondragout(self, event):
 		self.is_glowing = False
+		self.ondragout(event)
 
 	def draw(self, window):
 		if not self.visible: return

@@ -3,6 +3,7 @@ from LCARS.Controls import *
 from pygame.color import Color
 
 pygame.init()
+pygame.mixer.init()
 
 #f = pygame.font.Font("data/Swiss911ExtraCompressed.ttf", 12)
 
@@ -52,6 +53,48 @@ class Main(object):
 	def shutdown(self):
 		self.running = False
 
+	def _onquit(self, event):
+		self.onquit(event)
+
+	def _onkeypress(self, event):
+		self.onkeypress(event)
+
+	def _onmousedown(self, event):
+		ctrl = self.find_control_at_point(event.pos)
+		if ctrl is None: return
+		self.LAST_DRAG_CTRL = ctrl
+		ctrl._onmousedown(event)
+		self.onmousedown(event)
+
+	def _onmouseup(self, event):
+		self.LAST_DRAG_CTRL = None
+		ctrl = self.find_control_at_point(event.pos)
+		if ctrl is None: return
+		ctrl._onmouseup(event)
+		self.onmouseup(event)
+
+	def _onmousemotion(self, event):
+		ctrl = self.find_control_at_point(event.pos)
+		if event.buttons == (0, 0, 0):
+			if ctrl is None: return
+			ctrl._onmouseover(event)
+			self.onmouseover(event)
+		else:
+			if ctrl is None:
+				if self.LAST_DRAG_CTRL is None: return
+				self.LAST_DRAG_CTRL = None
+				self.LAST_DRAG_CTRL._ondragout(event)
+				self.ondrag(event)
+			else:
+				if ctrl == self.LAST_DRAG_CTRL:
+					ctrl._ondragover(event)
+					self.ondrag(event)
+				else:
+					self.LAST_DRAG_CTRL._ondragout(event)
+					self.LAST_DRAG_CTRL = ctrl
+					ctrl._ondragin(event)
+					self.ondrag(event)
+
 	def onquit(self, event):
 		self.shutdown()
 
@@ -60,46 +103,28 @@ class Main(object):
 			self.shutdown()
 
 	def onmousedown(self, event):
-		ctrl = self.find_control_at_point(event.pos)
-		if ctrl is None: return
-		self.LAST_DRAG_CTRL = ctrl
-		ctrl.onmousedown(event)
+		pass
 
 	def onmouseup(self, event):
-		self.LAST_DRAG_CTRL = None
-		ctrl = self.find_control_at_point(event.pos)
-		if ctrl is None: return
-		ctrl.onmouseup(event)
+		pass
 
-	def onmousemotion(self, event):
-		ctrl = self.find_control_at_point(event.pos)
-		if event.buttons == (0, 0, 0):
-			if ctrl is None: return
-			ctrl.onmouseover(event)
-		else:
-			if ctrl is None:
-				if self.LAST_DRAG_CTRL is None: return
-				self.LAST_DRAG_CTRL = None
-				self.LAST_DRAG_CTRL.ondragout(event)
-			else:
-				if ctrl == self.LAST_DRAG_CTRL:
-					ctrl.ondragover(event)
-				else:
-					self.LAST_DRAG_CTRL.ondragout(event)
-					self.LAST_DRAG_CTRL = ctrl
-					ctrl.ondragin(event)
+	def onmouseover(self, event):
+		pass
+
+	def ondrag(self, event):
+		pass
 
 	def onevent(self, event):
 		if event.type == pygame.QUIT:
-			self.onquit(event)
+			self._onquit(event)
 		elif event.type == pygame.KEYUP:
-			self.onkeypress(event)
+			self._onkeypress(event)
 		elif event.type == pygame.MOUSEBUTTONDOWN:
-			self.onmousedown(event)
+			self._onmousedown(event)
 		elif event.type == pygame.MOUSEBUTTONUP:
-			self.onmouseup(event)
+			self._onmouseup(event)
 		elif event.type == pygame.MOUSEMOTION:
-			self.onmousemotion(event)
+			self._onmousemotion(event)
 
 	def dispatch_events(self):
 		for event in pygame.event.get():
