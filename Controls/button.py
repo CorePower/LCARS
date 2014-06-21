@@ -11,7 +11,13 @@ from LCARS.Controls import CappedBar, Text, TextAlign
 def glow_colour(clr):
 	glow = pygame.Color(clr.r, clr.g, clr.b, clr.a)
 	hsla = glow.hsla
-	glow.hsla = (hsla[0], hsla[1], hsla[2]*1.5, hsla[3])
+	oldlum = hsla[2]
+	if oldlum >= 90:
+		glow.hsla = (hsla[0], hsla[1]/2, 90, hsla[3])
+	elif oldlum >= 80:
+		glow.hsla = (hsla[0], hsla[1], 100, hsla[3])
+	else:
+		glow.hsla = (hsla[0], hsla[1], 90, hsla[3])
 	return glow
 
 class Button(CappedBar):
