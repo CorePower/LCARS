@@ -3,11 +3,11 @@
 from distutils.core import setup
 
 setup(name='LCARS',
-      version='1.0.0.7',
-      description='LCARS style GUI for Python. Requires pygame',
-      author='James Fowkes',
-      author_email='jamesfowkes@gmail.com',
-      url='http://www.github.com/jamesfowkes/lcarsgui/',
+      version='1.1.0.0',
+      description='LCARS style GUI',
+      author='Grey Knight<tinyplasticgreyknight@yahoo.com>, James Fowkes<jamesfowkes@gmail.com>',
+      author_email='tinyplasticgreyknight@yahoo.com',
+      url='http://www.github.com/tinyplasticgreyknight/LCARS/',
 	  packages=['LCARS', 'LCARS.Controls', 'LCARS.Sound'],
       package_dir={'LCARS':'.'},
 	  package_data={'LCARS':['data/fonts/*', 'data/sfx/*']}

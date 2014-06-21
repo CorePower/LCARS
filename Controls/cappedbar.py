@@ -1,7 +1,3 @@
-##
-## LCARS GUI Objects Library : Rectangular bar capped with semicircle(s)
-##
-
 from __future__ import division
 
 import pygame

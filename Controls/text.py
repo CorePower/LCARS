@@ -1,14 +1,10 @@
-# #
-# # LCARS GUI Objects Library : Text Object in "Star Trek" font
-# #
-
 import pygame
 
 from LCARS.Controls import Drawable
 from pkg_resources import resource_filename
 
-font_search = "swiss911"
-
+FONT_SEARCH = "swiss911"
+FONT_NAME = "Swiss911ExtraCompressed.ttf"
 
 def getHeight(text, size):
 	(w, h) = pygame.font.SysFont(font, size).size(text)
@@ -28,8 +24,8 @@ class Text(Drawable):
 		self.xalign = xalign
 
 		font_list = pygame.font.get_fonts()
-		font_list = [font for font in font_list if (font.find(font_search) > -1)]
-		font_file = resource_filename(__name__, "../data/fonts/Swiss911ExtraCompressed.ttf")
+		font_list = [font for font in font_list if (font.find(FONT_SEARCH) > -1)]
+		font_file = resource_filename(__name__, "../data/fonts/%s" % FONT_NAME)
 
 		if len(font_list)>0:
 			font_file = font_list[0]

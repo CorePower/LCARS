@@ -1,13 +1,8 @@
-##
-## LCARS GUI Objects Library : "Elbo" with corner at top-left
-##
-
 from __future__ import division
 
 import pygame
 
 from LCARS.Controls import Drawable
-import math
 
 class Corner:
 	TOP_LEFT     = 0b111

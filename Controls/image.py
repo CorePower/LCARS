@@ -1,14 +1,10 @@
-##
-## LCARS GUI Objects Library : Text Object in "Star Trek" font
-##
-
 import pygame
 
 from LCARS.Controls import Control
 
 class Image(Control):
 	def __init__(self, enclosingrect, path):
-		Control.__init__(self, enclosingrect, 0, 0) ## Colours do not matter
+		Control.__init__(self, enclosingrect, None, None)
 		self.image = pygame.image.load(path)
 		imgrect = self.image.get_rect()
 
