@@ -5,7 +5,7 @@ from LCARS.Sound import Mixer
 from pygame.color import Color
 
 class Main(object):
-	VALID_EVENT_NAMES = ["onmouseup", "onmousedown", "onmouseover", "ondragover", "ondragout", "ondragin", "onclick"]
+	VALID_EVENT_NAMES = ["onmouseup", "onmousedown", "onmouseover", "ondragover", "ondragout", "ondragin", "onclick", "onmousescroll"]
 
 	def __init__(self, width, height, caption=None, surface=None, fullscreen=False, background=pygame.Color("black")):
 		self.controls_l = []
@@ -97,6 +97,8 @@ class Main(object):
 		self.onkeypress(event)
 
 	def _onmousedown(self, event):
+		if event.button == 4 or event.button == 5:
+			return self._onmousescroll(event)
 		ctrl = self.find_control_at_point(event.pos, "onmousedown")
 		if ctrl is None: return
 		self.last_drag_ctrl = ctrl
@@ -117,6 +119,12 @@ class Main(object):
 			self.onclick(event)
 		ctrl._onmouseup(event)
 		self.onmouseup(event)
+
+	def _onmousescroll(self, event):
+		ctrl = self.find_control_at_point(event.pos, "onmousescroll")
+		if ctrl is None: return
+		ctrl._onmousescroll(event)
+		self.onmousescroll(event)
 
 	def _onmousemotion(self, event):
 		ctrl = self.find_control_at_point(event.pos, "onmousemotion")
@@ -160,6 +168,9 @@ class Main(object):
 		pass
 
 	def onclick(self, event):
+		pass
+
+	def onmousescroll(self, event):
 		pass
 
 	def onmouseover(self, event):
